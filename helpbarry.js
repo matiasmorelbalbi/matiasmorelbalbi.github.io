@@ -1,3 +1,38 @@
+
+function handleComplete(evt, comp) {
+    var lib = comp.getLibrary();
+    var ss = comp.getSpriteSheet();
+    var queue = evt.target;
+    var ssMetadata = lib.ssMetadata;
+
+    // Load the sprite sheets and animation
+    for (i = 0; i < ssMetadata.length; i++) {
+        ss[ssMetadata[i].name] = new createjs.SpriteSheet({
+            "images": [queue.getResult(ssMetadata[i].name)],
+            "frames": ssMetadata[i].frames
+        });
+    }
+
+    exportRoot = new lib.helpbarry();
+    stage = new lib.Stage(canvas);
+    stage.enableMouseOver();
+
+    // Register the "tick" event listener for animation
+    fnStartAnimation = function () {
+        stage.addChild(exportRoot);
+        createjs.Ticker.setFPS(lib.properties.fps);
+        createjs.Ticker.addEventListener("tick", stage);
+        stage.addEventListener("tick", handleTick);
+
+        // Now that animation is ready, hide the loading screen
+        document.getElementById('loading-screen').style.display = 'none';  // Hides the loading screen
+    };
+
+    // Rest of your existing logic for handling the animation
+    fnStartAnimation();
+}
+
+
 (function (cjs, an) {
 
 var p; // shortcut to reference prototypes
